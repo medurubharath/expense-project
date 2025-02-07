@@ -1,0 +1,187 @@
+44.203.120.86 | 172.31.80.37 | t2.micro | null
+[ root@ip-172-31-80-37 / ]# sudo su -
+
+44.203.120.86 | 172.31.80.37 | t2.micro | null
+[ root@ip-172-31-80-37 / ]# dnf module disable nodejs -y
+
+44.203.120.86 | 172.31.80.37 | t2.micro | null
+[ root@ip-172-31-80-37 / ]# dnf module enable nodejs:20 -y
+
+44.203.120.86 | 172.31.80.37 | t2.micro | null
+[ root@ip-172-31-80-37 / ]# dnf install nodejs -y
+
+44.203.120.86 | 172.31.80.37 | t2.micro | null
+[ root@ip-172-31-80-37 / ]# useradd expense
+
+44.203.120.86 | 172.31.80.37 | t2.micro | null
+[ root@ip-172-31-80-37 / ]# mkdir /app
+
+44.203.120.86 | 172.31.80.37 | t2.micro | null
+[ root@ip-172-31-80-37 / ]# cd /app
+
+44.203.120.86 | 172.31.80.37 | t2.micro | null
+[ root@ip-172-31-80-37 /app ]# curl -o /tmp/backend.zip https://expense-builds.s3.us-east-1.amazonaws.com/expense-backend-v2.zip
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100  3162  100  3162    0     0  24897      0 --:--:-- --:--:-- --:--:-- 24897
+
+44.203.120.86 | 172.31.80.37 | t2.micro | null
+
+[ root@ip-172-31-80-37 /app ]# unzip /tmp/backend.zip
+Archive:  /tmp/backend.zip
+  inflating: DbConfig.js
+  inflating: TransactionService.js
+  inflating: index.js
+  inflating: package.json
+   creating: schema/
+  inflating: schema/backend.sql
+
+44.203.120.86 | 172.31.80.37 | t2.micro | null
+[ root@ip-172-31-80-37 /app ]# npm install
+
+added 88 packages, and audited 89 packages in 5s
+
+15 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+
+44.203.120.86 | 172.31.80.37 | t2.micro | null
+[ root@ip-172-31-80-37 /app ]# vi /etc/systemd/system/backend.service  #change here 
+
+44.203.120.86 | 172.31.80.37 | t2.micro | null
+[ root@ip-172-31-80-37 /app ]# systemctl daemon-reload
+
+44.203.120.86 | 172.31.80.37 | t2.micro | null
+[ root@ip-172-31-80-37 /app ]# systemctl start backend
+
+44.203.120.86 | 172.31.80.37 | t2.micro | null
+[ root@ip-172-31-80-37 /app ]# systemctl enable  backend
+
+44.203.120.86 | 172.31.80.37 | t2.micro | null
+[ root@ip-172-31-80-37 /app ]# systemctl status backend
+× backend.service - Backend Service
+     Loaded: loaded (/etc/systemd/system/backend.service; enabled; preset: disabled)
+     Active: failed (Result: exit-code) since Thu 2025-02-06 19:12:03 UTC; 11s ago
+   Duration: 315ms
+   Main PID: 2703 (code=exited, status=1/FAILURE)
+        CPU: 274ms
+
+Feb 06 19:12:03 ip-172-31-80-37.ec2.internal backend[2703]:   code: 'ER_ACCESS_DENIED_ERROR',
+Feb 06 19:12:03 ip-172-31-80-37.ec2.internal backend[2703]:   errno: 1045,
+Feb 06 19:12:03 ip-172-31-80-37.ec2.internal backend[2703]:   sqlState: '28000',
+Feb 06 19:12:03 ip-172-31-80-37.ec2.internal backend[2703]:   sqlMessage: "Access denied for user 'expense'@'ip-172-31-80-37.ec2.internal' (using password: YES)",
+Feb 06 19:12:03 ip-172-31-80-37.ec2.internal backend[2703]:   sql: undefined,
+Feb 06 19:12:03 ip-172-31-80-37.ec2.internal backend[2703]:   fatal: true
+Feb 06 19:12:03 ip-172-31-80-37.ec2.internal backend[2703]: }
+Feb 06 19:12:03 ip-172-31-80-37.ec2.internal backend[2703]: Node.js v20.17.0
+Feb 06 19:12:03 ip-172-31-80-37.ec2.internal systemd[1]: backend.service: Main process exited, code=exited, status=1/FAILURE
+Feb 06 19:12:03 ip-172-31-80-37.ec2.internal systemd[1]: backend.service: Failed with result 'exit-code'.
+
+
+44.203.120.86 | 172.31.80.37 | t2.micro | null
+[ root@ip-172-31-80-37 /app ]# dnf install mysql -y
+Last metadata expiration check: 0:04:09 ago on Thu Feb  6 19:04:31 2025.
+Dependencies resolved.
+=======================================================================================================================================================================
+ Package                                         Architecture                Version                             Repository                                       Size
+=======================================================================================================================================================================
+Installing:
+ mysql                                           x86_64                      8.0.36-1.el9_3                      rhel-9-appstream-rhui-rpms                      2.7 M
+Installing dependencies:
+ mariadb-connector-c-config                      noarch                      3.2.6-1.el9_0                       rhel-9-appstream-rhui-rpms                       11 k
+ mysql-common                                    x86_64                      8.0.36-1.el9_3                      rhel-9-appstream-rhui-rpms                       78 k
+
+Transaction Summary
+=======================================================================================================================================================================
+Install  3 Packages
+
+Total download size: 2.8 M
+Installed size: 60 M
+Downloading Packages:
+(1/3): mariadb-connector-c-config-3.2.6-1.el9_0.noarch.rpm                                                                             180 kB/s |  11 kB     00:00
+(2/3): mysql-common-8.0.36-1.el9_3.x86_64.rpm                                                                                          1.1 MB/s |  78 kB     00:00
+(3/3): mysql-8.0.36-1.el9_3.x86_64.rpm                                                                                                  23 MB/s | 2.7 MB     00:00
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Total                                                                                                                                   18 MB/s | 2.8 MB     00:00
+Running transaction check
+Transaction check succeeded.
+Running transaction test
+Transaction test succeeded.
+Running transaction
+  Preparing        :                                                                                                                                               1/1
+  Installing       : mariadb-connector-c-config-3.2.6-1.el9_0.noarch                                                                                               1/3
+  Installing       : mysql-common-8.0.36-1.el9_3.x86_64                                                                                                            2/3
+  Installing       : mysql-8.0.36-1.el9_3.x86_64                                                                                                                   3/3
+  Running scriptlet: mysql-8.0.36-1.el9_3.x86_64                                                                                                                   3/3
+  Verifying        : mariadb-connector-c-config-3.2.6-1.el9_0.noarch                                                                                               1/3
+  Verifying        : mysql-8.0.36-1.el9_3.x86_64                                                                                                                   2/3
+  Verifying        : mysql-common-8.0.36-1.el9_3.x86_64                                                                                                            3/3
+
+Installed:
+  mariadb-connector-c-config-3.2.6-1.el9_0.noarch                   mysql-8.0.36-1.el9_3.x86_64                   mysql-common-8.0.36-1.el9_3.x86_64
+
+Complete!
+
+44.203.120.86 | 172.31.80.37 | t2.micro | null
+[ root@ip-172-31-80-37 /app ]# mysql -h 172.31.83.75 -uroot -pExpenseApp@1 < /app/schema/backend.sql
+mysql: [Warning] Using a password on the command line interface can be insecure.
+
+44.203.120.86 | 172.31.80.37 | t2.micro | null
+[ root@ip-172-31-80-37 /app ]# systemctl restart backend
+
+44.203.120.86 | 172.31.80.37 | t2.micro | null
+[ root@ip-172-31-80-37 /app ]# systemctl status backend
+? backend.service - Backend Service
+     Loaded: loaded (/etc/systemd/system/backend.service; enabled; preset: disabled)
+     Active: active (running) since Thu 2025-02-06 19:18:01 UTC; 6s ago
+   Main PID: 2759 (node)
+      Tasks: 7 (limit: 4300)
+     Memory: 27.4M
+        CPU: 272ms
+     CGroup: /system.slice/backend.service
+             +-2759 /bin/node /app/index.js
+
+Feb 06 19:18:01 ip-172-31-80-37.ec2.internal systemd[1]: Started Backend Service.
+Feb 06 19:18:01 ip-172-31-80-37.ec2.internal snoopy[2759]: [uid:1002 sid:2759 tty:(none) cwd:/ filename:/bin/node]: /bin/node /app/index.js
+Feb 06 19:18:01 ip-172-31-80-37.ec2.internal backend[2759]: { "timestamp" : 1738869481, "msg" : "App Started on Port 8080" }
+
+44.203.120.86 | 172.31.80.37 | t2.micro | null
+[ root@ip-172-31-80-37 /app ]# ping -c 3 44.203.120.86
+PING 44.203.120.86 (44.203.120.86) 56(84) bytes of data.
+64 bytes from 44.203.120.86: icmp_seq=1 ttl=63 time=0.724 ms
+64 bytes from 44.203.120.86: icmp_seq=2 ttl=63 time=1.01 ms
+64 bytes from 44.203.120.86: icmp_seq=3 ttl=63 time=0.734 ms
+
+--- 44.203.120.86 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2026ms
+rtt min/avg/max/mdev = 0.724/0.822/1.009/0.132 ms
+
+44.203.120.86 | 172.31.80.37 | t2.micro | null
+[ root@ip-172-31-80-37 /app ]# telnet 172.31.83.75 3306
+Trying 172.31.83.75...
+Connected to 172.31.83.75.
+Escape character is '^]'.
+J
+8.0.36YZ\G3}¦Btg#dDTdx\caching_sha2_password
+!#08S01Got packets out of orderConnection closed by foreign host.
+
+44.203.120.86 | 172.31.80.37 | t2.micro | null
+[ root@ip-172-31-80-37 /app ]# netstat -ltnp
+Active Internet connections (only servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name
+tcp        0      0 0.0.0.0:22              0.0.0.0:*               LISTEN      1253/sshd: /usr/sbi
+tcp6       0      0 :::8080                 :::*                    LISTEN      2759/node
+tcp6       0      0 :::22                   :::*                    LISTEN      1253/sshd: /usr/sbi
+
+44.203.120.86 | 172.31.80.37 | t2.micro | null
+[ root@ip-172-31-80-37 /app ]# ps -ef |grep node
+root         709       2  0 18:29 ?        00:00:00 [xfs-inodegc/dm-]
+root         813       2  0 18:30 ?        00:00:00 [xfs-inodegc/dm-]
+root         814       2  0 18:30 ?        00:00:00 [xfs-inodegc/dm-]
+root         850       2  0 18:30 ?        00:00:00 [xfs-inodegc/xvd]
+root         868       2  0 18:30 ?        00:00:00 [xfs-inodegc/dm-]
+root         870       2  0 18:30 ?        00:00:00 [xfs-inodegc/dm-]
+root         890       2  0 18:30 ?        00:00:00 [xfs-inodegc/dm-]
+expense     2759       1  0 19:18 ?        00:00:00 /bin/node /app/index.js
+root        2803    1382  0 19:25 pts/0    00:00:00 grep --color=auto node
